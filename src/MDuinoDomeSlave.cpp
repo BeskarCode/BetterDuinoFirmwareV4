@@ -116,6 +116,9 @@ void MDuinoDomeSlave::parseCommand(const char* command)
         break;
     case '*':
         processHoloCommand(command);
+		 // Forward holo commands to Teeces/AstroPixels so downstream devices
+        // also receive the MarcDuino HP command stream (e.g. *ONxx, *RDxx).
+        Serial_Teeces.printf(F("%s\r"), command);
         break;
     case '@':
         processDisplayCommand(command);
