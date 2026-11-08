@@ -2,6 +2,30 @@
 
 **English** | [Deutsch](README.de.md)
 
+## About this fork (BeskarCode)
+
+This is a fork of [RealNobser/BetterDuinoFirmwareV4](https://github.com/RealNobser/BetterDuinoFirmwareV4), kept up to date with it (last sync: upstream `01ea27d`, November 2026). Everything below this section is the upstream documentation. This fork changes one thing:
+
+**The dome slave also sends every holo command (`*…`) on to the Teeces port.**
+
+In `src/MDuinoDomeSlave.cpp`, after the slave has handled a `*` command for its own holos, it writes the same line, ended with `\r`, to `Serial_Teeces`:
+
+```cpp
+case '*':
+    processHoloCommand(command);
+    // Forward holo commands to Teeces/AstroPixels so downstream devices
+    // also receive the MarcDuino HP command stream (e.g. *ONxx, *RDxx).
+    Serial_Teeces.printf(F("%s\r"), command);
+    break;
+```
+
+Why: in our droid the holoprojector lights are driven by an [AstroPixels](https://github.com/BeskarCode/AstroPixelsPlus) board wired to the slave's Teeces output, not by the slave itself. Upstream, `*` commands stop at the slave, so `*ON01`, `*OF01`, `*RD01` and the like never reached the holo lights. With this change the slave still moves its holo servos as before, and AstroPixels gets the same command for the lights. Our AstroPixelsPlus fork also accepts `*HP…` and `*AP…`, so its direct holo and ReelTwo commands can be sent from the Shadow MD controller through this path.
+
+What to keep in mind:
+
+- The Teeces port now also carries holo commands. If you have Teeces lights or any other device on that port instead of AstroPixels, check how it handles those extra lines before using this fork.
+- It costs a few bytes of flash: the combined firmware builds at 31,612 of 32,768 bytes (96.5 %) with avr-gcc and `-mcall-prologues`.
+
 ## What is the MarcDuino system?
 (from https://www.curiousmarc.com/r2-d2/marcduino-system):
 
