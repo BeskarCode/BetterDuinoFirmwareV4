@@ -97,6 +97,18 @@
 
 #define SERVO_BUZZ_MILLIS 2000
 
+// Random holo movement (*RDxx). The original code used speed random(0,255) - where 0 means
+// FULL speed - and a new target every 0.2-2 s: lots of hard servo starts that browned out the
+// dome Slave. These limits avoid full-speed jumps and give each move time to finish.
+#define HOLO_RANDOM_SPEED_MIN     40     // 1 = slowest, 255 = fastest (0 = full speed, avoided)
+#define HOLO_RANDOM_SPEED_MAX     180
+#define HOLO_RANDOM_INTERVAL_MIN  1000   // ms between random holo moves
+#define HOLO_RANDOM_INTERVAL_MAX  3000
+
+// Scream (:SE01 / :SE51): open the 13 dome panels one after another instead of all at once,
+// to avoid the current spike that resets the boards. Comment out for the original behaviour.
+#define STAGGERED_SCREAM
+
 #define COMMAND_DELAY 50
 
 // #define DIGITAL_JEDI

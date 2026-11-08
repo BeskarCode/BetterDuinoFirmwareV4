@@ -38,7 +38,11 @@ void MDuinoDomeSequencePlayerR2::playSequence(const byte SeqNr)
 		break;
 	case 1:	    // SCREAM
 	case 51:    // Panel only Version
+		#ifdef STAGGERED_SCREAM
+		Sequencer.loadSequence(panel_all_open_staggered, SEQ_SIZE(panel_all_open_staggered));
+		#else
 		Sequencer.loadSequence(panel_all_open, SEQ_SIZE(panel_all_open));
+		#endif
 		Sequencer.setServoSpeed(MDuinoSequencer::speed_t::slow);
 		break;
 	case 2:	    // WAVE

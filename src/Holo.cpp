@@ -289,11 +289,11 @@ void Holo::moveTrigger()
 
     HPos = random(HMinPos, HMaxPos);
     VPos = random(VMinPos, VMaxPos);
-    Speed= random(0,255);
+    Speed= random(HOLO_RANDOM_SPEED_MIN, HOLO_RANDOM_SPEED_MAX + 1);
     
     move(HPos, VPos, Speed);
 
-    HoloMoveIntervall   = random(200, 2000);
+    HoloMoveIntervall   = random(HOLO_RANDOM_INTERVAL_MIN, HOLO_RANDOM_INTERVAL_MAX + 1);
     HoloMoveMillis      = millis();
 }
 

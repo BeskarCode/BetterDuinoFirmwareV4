@@ -55,6 +55,44 @@ sequence_t const panel_all_open PROGMEM =
 		{SPLIT_WORD(0), 	_NP, 	_NP, 	_NP, 	_NP,	_NP, 	_NP, 	_NP, 	_NP, 	_NP,	_NP,    _NP,   _NP,		_NP}
 };
 
+#ifdef STAGGERED_SCREAM
+// Scream with the panels opening one after another (150 ms apart), then closing the same way.
+// Avoids the current spike of 13 servos starting at once. Same total open time as panel_all_open.
+sequence_t const panel_all_open_staggered PROGMEM =
+{
+		//				---------------------------------------MASTER--------------------------------------------  ----SLAVE------
+		// time				servo1	servo2	servo3	servo4	servo5	servo6	servo7	servo8	servo9 servo10 servo11 servo12 servo13
+		{SPLIT_WORD(20), 	_CLS, 	_CLS, 	_CLS, 	_CLS, 	_CLS, 	_CLS, 	_CLS, 	_CLS, 	_CLS, 	_CLS, 	_CLS, 	_CLS, 	_CLS},
+		{SPLIT_WORD(15), 	_OPN, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP},
+		{SPLIT_WORD(15), 	_NP, 	_OPN, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP},
+		{SPLIT_WORD(15), 	_NP, 	_NP, 	_OPN, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP},
+		{SPLIT_WORD(15), 	_NP, 	_NP, 	_NP, 	_OPN, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP},
+		{SPLIT_WORD(15), 	_NP, 	_NP, 	_NP, 	_NP, 	_OPN, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP},
+		{SPLIT_WORD(15), 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_OPN, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP},
+		{SPLIT_WORD(15), 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_OPN, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP},
+		{SPLIT_WORD(15), 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_OPN, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP},
+		{SPLIT_WORD(15), 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_OPN, 	_NP, 	_NP, 	_NP, 	_NP},
+		{SPLIT_WORD(15), 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_OPN, 	_NP, 	_NP, 	_NP},
+		{SPLIT_WORD(15), 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_OPN, 	_NP, 	_NP},
+		{SPLIT_WORD(15), 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_OPN, 	_NP},
+		{SPLIT_WORD(300), 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_OPN},
+		{SPLIT_WORD(15), 	_CLS, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP},
+		{SPLIT_WORD(15), 	_NP, 	_CLS, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP},
+		{SPLIT_WORD(15), 	_NP, 	_NP, 	_CLS, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP},
+		{SPLIT_WORD(15), 	_NP, 	_NP, 	_NP, 	_CLS, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP},
+		{SPLIT_WORD(15), 	_NP, 	_NP, 	_NP, 	_NP, 	_CLS, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP},
+		{SPLIT_WORD(15), 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_CLS, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP},
+		{SPLIT_WORD(15), 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_CLS, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP},
+		{SPLIT_WORD(15), 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_CLS, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP},
+		{SPLIT_WORD(15), 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_CLS, 	_NP, 	_NP, 	_NP, 	_NP},
+		{SPLIT_WORD(15), 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_CLS, 	_NP, 	_NP, 	_NP},
+		{SPLIT_WORD(15), 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_CLS, 	_NP, 	_NP},
+		{SPLIT_WORD(15), 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_CLS, 	_NP},
+		{SPLIT_WORD(150), 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_CLS},
+		{SPLIT_WORD(0), 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP, 	_NP}
+};
+#endif
+
 sequence_t const panel_all_open_long PROGMEM =
 {
 		//				---------------------------------------MASTER--------------------------------------------  ----SLAVE------ 
