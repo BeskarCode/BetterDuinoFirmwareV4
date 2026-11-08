@@ -26,27 +26,14 @@ MDuinoDomeMaster::MDuinoDomeMaster(SendOnlySoftwareSerial& Serial_Slave, SendOnl
     }
 
     MDuinoStorage::MDuinoMP3PlayerType player = Storage.getMP3Player();
+    if (player >= MDuinoStorage::MDuinoMP3PlayerType::unknown)
+        player = MDuinoStorage::MDuinoMP3PlayerType::MP3Trigger;
+#ifndef INCLUDE_DY_PLAYER
+    if (player == MDuinoStorage::MDuinoMP3PlayerType::DYPlayer)   // not compiled in: fall back like before
+        player = MDuinoStorage::MDuinoMP3PlayerType::MP3Trigger;
+#endif
 
-    switch (player)
-    {
-        case MDuinoStorage::MDuinoMP3PlayerType::MP3Trigger:
-            Sound = new MDuinoSoundMP3Trigger(Serial_MP3);
-        break;
-        case MDuinoStorage::MDuinoMP3PlayerType::DFPlayer:
-            Sound = new MDuinoSoundDFPlayer(Serial_MP3);
-        break;
-        case MDuinoStorage::MDuinoMP3PlayerType::Vocalizer:
-            Sound = new MDuinoSoundVocalizer(Serial_MP3);
-        break;
-#ifdef INCLUDE_DY_PLAYER
-        case MDuinoStorage::MDuinoMP3PlayerType::DYPlayer:
-            Sound = new MDuinoSoundDYPlayer(Serial_MP3);
-        break;
-#endif  // INCLUDE_DY_PLAYER
-        default:
-            Sound = new MDuinoSoundMP3Trigger(Serial_MP3);
-        break;
-    }
+    Sound = new MDuinoSound(Serial_MP3, player);
 
     RandomSoundMillis   = millis();
 }
@@ -99,20 +86,8 @@ void MDuinoDomeMaster::run()
 {
     MDuinoDome::run();
 
-    // Servos. TODO: Double implementation, check BaseClass Idea for Dome Board
-    // check https://stackoverflow.com/questions/13340074/c-static-const-members-overriding for const static members MinPanel/MaxPanel
-    if (ServoBuzzIntervall != 0)
-    {
-        if ((millis() - ServoBuzzMillis) > ServoBuzzIntervall)
-        {
-            for (byte i = MinPanel; i <= MaxPanel; i++)
-            {
-                if (!Panels[i]->isMoving())
-                    Panels[i]->detach();
-            }
-            ServoBuzzMillis = millis();
-        }
-    }
+    // Servos - detach idle servos to eliminate buzz
+    checkServoBuzz(Panels, MinPanel, MaxPanel);
 
     // Random Sounds
     if (RandomSoundIntervall != 0)
@@ -275,7 +250,7 @@ void MDuinoDomeMaster::processPanelCommand(const char* command)
     // Address Master Panels
     if (strcmp(cmd, "MV")==0)
     {
-        if (param_num > MaxPanel)
+        if ((param_num < MinPanel) || (param_num > MaxPanel))
             return;
 
         Panels[param_num]->moveMS((uint16_t)param_num_ext, 0, true);
